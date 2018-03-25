@@ -27,6 +27,11 @@ def do_it():
 
 
 def tuling(content):
+    """
+    调用图灵机器人
+    :param content: 聊天内容
+    :return: 机器人回复内容
+    """
     url = 'http://www.tuling123.com/openapi/api'
     param = {
         'key': 'aee98f38457842b2891d405f1fdaa701',
