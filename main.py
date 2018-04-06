@@ -3,27 +3,35 @@ import requests
 import json
 
 
-def do_it():
+def do_it(nick):
 
+    running = False
     bot = Bot(cache_path=True)
     # 好友统计信息
     # print(bot.friends().stats())
     # my_friend = bot.mps().search(nick)[0]
     # my_friend = bot.friends().search(nick)[0]
-    # my_friend = bot.groups().search(nick)[0]
+    my_friend = bot.groups().search(nick)[0]
+
+    my_friend.send("智能机器人待机中...\n输入（芝麻开门）启动聊天功能")
 
     # 打印来自其他好友、群聊和公众号的消息
     # 全局注册必须现在前面, 否则后面的注册会被覆盖
-    @bot.register()
+    @bot.register(my_friend)
     def print_others(msg):
-        if msg.is_at():
+        global running
+        if msg.type == 'Text':
             print('received msg: ', msg)
-            if msg.type == 'Text':
+            if "芝麻开门" in msg.text:
+                running = True
+                return "聊天功能已启动，如果需要停止聊天，输入（芝麻关门）即可"
+            elif "芝麻关门" in msg.text:
+                running = False
+                return "聊天功能已关闭，如果需要开启聊天，输入（芝麻开门）即可"
+            elif running:
                 reply_msg = tuling(msg.text)
-            else:
-                reply_msg = '抱歉, 我不明白你在说啥子'
-            print('reply_msg:', reply_msg)
-            return reply_msg
+                print('reply_msg:', reply_msg)
+                return reply_msg
 
 
 def tuling(content):
@@ -44,8 +52,8 @@ def tuling(content):
 
 
 if __name__ == '__main__':
-    do_it()
-    # do_it('娃娃机特工队')
+    # do_it()
+    do_it('娃娃机特工队')
 
     # print(tuling('玩玩玩'))
 
